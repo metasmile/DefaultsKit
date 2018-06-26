@@ -115,12 +115,12 @@ person?.pets.first  // cat
 ```
 
 
-### Auto Property
+### Property Definition
 Make your pre-defined custom properties for your project with Defaults.
 
 An example to use with basic Codable types:
 ```swift
-extension Defaults: DefaultsAutoProperty {
+extension Defaults: DefaultsProperty {
     public var autoStringProperty: String? {
         set(newValue){ set(newValue) } get{ return get() }
     }
@@ -140,7 +140,7 @@ And also can use like this together with the default value with various codable 
 public struct CustomValueType: Codable{
     var key:String = "value"
 }
-extension Defaults: DefaultsAutoProperty {
+extension Defaults: DefaultsProperty {
     // default value with 'or'
     public var autoStringPropertyWithDefaultValue: String? {
         set(newValue){ set(newValue) } get{ return get(or:"default string value") }

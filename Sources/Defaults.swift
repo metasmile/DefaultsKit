@@ -154,11 +154,11 @@ public final class Defaults {
 
 
 /*
-    DefaultsAutoProperty protocol extension
+    A protocol extension, DefaultsProperty
     - Contributed by Taeho Lee (github.com/metasmile)
 */
-public protocol DefaultsAutoProperty {}
-public extension DefaultsAutoProperty where Self:Defaults{
+public protocol DefaultsProperty {}
+public extension DefaultsProperty where Self:Defaults{
 
     /// Sets a newValue automatically associated with the current function(key) name.
     /// If newValue is nil, the key in UserDefaults will be deleted.
