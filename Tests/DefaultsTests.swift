@@ -158,7 +158,8 @@ class DefaultsKitTests: XCTestCase {
         savedValues?.forEach({ (value) in
             XCTAssertTrue(savedValues?.contains(value) ?? false)
         })
-        
+        //reset for next test (e.g. testClear())
+        defaults.clear(.arrayOfIntegersKey)
     }
     
     func testClear() {
@@ -199,4 +200,41 @@ class DefaultsKitTests: XCTestCase {
         XCTAssertEqual(savedPerson?.children.first?.age, 30)
     }
     
+    func testProperty(){
+        
+        //basic test
+        defaults.autoStringProperty = "string value"
+        XCTAssertTrue(defaults.has(Key<String>("autoStringProperty")))
+        XCTAssertEqual(Defaults.shared.autoStringProperty,"string value")
+        
+        //test default value
+        XCTAssertTrue(Defaults.shared.autoStringPropertyWithDefaultValue != nil)
+        XCTAssertTrue(defaults.has(Key<String>("autoStringPropertyWithDefaultValue")))
+        XCTAssertTrue(
+            defaults.autoStringPropertyWithDefaultValue == Defaults.testValue_autoStringPropertyWithDefaultValue_defaultValue
+                || defaults.autoStringPropertyWithDefaultValue == Defaults.testValue_autoStringPropertyWithDefaultValue_newValue
+        )
+        
+        defaults.autoStringPropertyWithDefaultValue = Defaults.testValue_autoStringPropertyWithDefaultValue_newValue
+        XCTAssertEqual(Defaults.shared.autoStringPropertyWithDefaultValue, Defaults.testValue_autoStringPropertyWithDefaultValue_newValue)
+        
+        //test custom value type with optional
+        XCTAssertTrue(defaults.autoCustomOptionalProperty == nil)
+        XCTAssertFalse(defaults.has(Key<CustomValueType>("autoCustomOptionalProperty")))
+        
+        //test for a case without default value
+        defaults.autoCustomOptionalProperty = CustomValueType()
+        XCTAssertTrue(defaults.autoCustomOptionalProperty != nil)
+        defaults.autoCustomOptionalProperty = nil
+        XCTAssertTrue(defaults.autoCustomOptionalProperty == nil)
+        
+        //test for a case with default setter's value
+        defaults.autoCustomOptionalPropertySetterDefaultValue = nil
+        XCTAssertTrue(defaults.autoCustomOptionalPropertySetterDefaultValue != nil)
+        XCTAssertTrue(defaults.autoCustomOptionalPropertyGetterDefaultValue != nil)
+        
+        //test custom value type with non optional
+        XCTAssertTrue(defaults.autoCustomNonOptionalProperty.key == "value")
+        XCTAssertTrue(defaults.has(Key<CustomValueType>("autoCustomNonOptionalProperty")))
+    }
 }
