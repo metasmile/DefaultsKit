@@ -35,11 +35,11 @@ defaults.get(for: key) // Output: Codable FTW 😃
 ### Check if a key has a value:
 
 ```swift
-if defaults.has(key) { 
+if defaults.has(key) {
     // Do your thing
 }
 ```
-> If you just need to know that a key/value pair exists, **without actually using the value**, use the `has()` method instead of the optional `get(for:key)`. For complex objects it will prevent any unnecessary deserialization. 
+> If you just need to know that a key/value pair exists, **without actually using the value**, use the `has()` method instead of the optional `get(for:key)`. For complex objects it will prevent any unnecessary deserialization.
 
 ### Implicit Member Expression
 
@@ -115,8 +115,8 @@ person?.pets.first  // cat
 ```
 
 
-### Property Definition
-Make your pre-defined custom properties for your project with Defaults.
+### Key-Safety Property Definition
+DefaultsKit supports protocol expansion pattern that is focusing on swift-literalized, therefore safe custom properties.
 
 An example to use with basic Codable types:
 ```swift
@@ -157,6 +157,31 @@ extension Defaults: DefaultsProperty {
         set(newValue){ set(newValue, or: CustomValueType()) } get{ return get() }
     }
 }
+```
+
+With this pattern, as you can expect, you also can control access permission with protocol. It means you can use 'private' or 'fileprivate' defaults access.
+
+```swift
+// MyFile.swift
+fileprivate protocol PrivateDefaultKeysInThisSwiftFile:DefaultsProperty{
+    var filePrivateValue: String? {set get}
+}
+
+extension Defaults: PrivateDefaultKeysInThisSwiftFile {
+    public var filePrivateValue: String? {
+        set{ set(newValue) } get{ return get() }
+    }
+}
+
+// Can access - 👌
+Defaults.shared.filePrivateValue
+```
+
+```swift
+// MyOtherFile.swift
+
+// Not able to access - ❌
+Defaults.shared.filePrivateValue
 ```
 
 ## License
